@@ -15,21 +15,24 @@ final class CircularTimerView: UIView {
         }
     }
     
-    var isPaused = false {
+    var isPaused = true {
         didSet {
             if isPaused {
                 stop()
+            } else {
+                start()
             }
         }
     }
-    
+    //stop the actual timer and not just the animation
     // MARK: - Private Properties
     private let shapeLayer = CAShapeLayer()
     private let backgroundLayer = CAShapeLayer()
     private let centerCircleLayer = CAShapeLayer()
     private var displayLink: CADisplayLink?
     private var startTime: CFTimeInterval?
-    
+    private var pausedTime: CFTimeInterval?
+
     // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -54,6 +57,7 @@ final class CircularTimerView: UIView {
     func start() {
         shapeLayer.strokeEnd = 0
         startTime = CACurrentMediaTime()
+        // TODO: use the pause time to calculate the new start point
         stop() // Ensure any previous animation is cancelled
         
         displayLink = CADisplayLink(target: self, selector: #selector(updateProgress))
@@ -61,6 +65,7 @@ final class CircularTimerView: UIView {
     }
     
     func stop() {
+        pausedTime = CACurrentMediaTime()
         displayLink?.invalidate()
         displayLink = nil
     }
@@ -124,7 +129,7 @@ final class CircularTimerView: UIView {
         
         if progress >= 1 {
             stop()
+            pausedTime = nil
         }
     }
-    
 }

@@ -20,7 +20,7 @@ final class ViewController: UIViewController {
 
     // MARK: - Actions
     @IBAction func startTapped(_ sender: UIButton) {
-        timerView.start()
+        timerView.isPaused.toggle()
     }
 
     // MARK: - Helpers
